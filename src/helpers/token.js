@@ -1,14 +1,26 @@
 import jwt from 'jsonwebtoken'
 
-const generateToken = (payload) => {
+const generateToken = (user) => {
   const token = jwt.sign(
+    { name: user.firstName, role: user.role },
+    process.env.SECRET_KEY,
     {
-      data: payload
-    },
-    process.env.SECRET
-    // { expiresIn: '1d' }
+      expiresIn: '5m'
+    }
   )
-  return token
+  
+  const refreshToken = jwt.sign(
+    { name: user.firstName, refresh: 'Es un rt !', role: user.role },
+    process.env.SECRET_REFRESH_KEY,
+    {
+      expiresIn: '1h'
+    }
+  )
+
+  return{
+    token,
+    refreshToken
+  }
 }
 
 const getTokenData = (token) => {
