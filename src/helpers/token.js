@@ -2,13 +2,13 @@ import jwt from 'jsonwebtoken'
 
 const generateToken = (user) => {
   const token = jwt.sign(
-    { name: user.firstName, role: user.role },
+    { name: user.firstName, role: user.role, userID: user.id },
     process.env.SECRET_KEY,
     {
-      expiresIn: '5m'
+      expiresIn: '1h'
     }
   )
-  
+
   const refreshToken = jwt.sign(
     { name: user.firstName, refresh: 'Es un rt !', role: user.role },
     process.env.SECRET_REFRESH_KEY,
@@ -17,7 +17,7 @@ const generateToken = (user) => {
     }
   )
 
-  return{
+  return {
     token,
     refreshToken
   }
