@@ -21,4 +21,4 @@ export const auth = async (req, res, next) => {
   }
 }
 
-//Middleware que revisa en cada solicitud si su rol es administrador.
+// Middleware que revisa en cada solicitud si su rol es administrador.

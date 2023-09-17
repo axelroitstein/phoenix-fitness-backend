@@ -11,46 +11,71 @@ datasource db {
 }
 
 model User {
-  id            String          @id @default(auto()) @map("_id") @db.ObjectId
-  firstName     String          @map("first_name")
-  lastName      String          @map("last_name")
-  email         String          @unique
+  id            String         @id @default(auto()) @map("_id") @db.ObjectId
+  firstName     String         @map("first_name")
+  lastName      String         @map("last_name")
+  email         String         @unique
   password      String
   phone         String
   address       String
-  gender        String
-  role          String          @default("user")
-  birthDay      DateTime        @map("birth_day")
+  role          String         @default("user")
+  birthDay      DateTime       @map("birth_day")
   pay           Pay[]
-  trainer       Trainer[]
-  excercisePlan ExcercisePlan[]
-  mealPlan      MealPlan[]
-  createdAt     DateTime        @default(now()) @map("created_at")
-  updatedAt     DateTime        @updatedAt @map("updated_at")
+  exercisePlan exercisePlan?
+  mealPlan      MealPlan?
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
 
   @@map("users")
 }
 
 model Pay {
   id     String @id @default(auto()) @map("_id") @db.ObjectId
-  userId String @db.ObjectId
+  userId String @map("user_id") @db.ObjectId
   User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("pay")
 }
 
-model Trainer {
-  id     String @id @default(auto()) @map("_id") @db.ObjectId
-  userId String @db.ObjectId
-  User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+model exercisePlan {
+  id         String       @id @default(auto()) @map("_id") @db.ObjectId
+  userId     String       @unique @map("user_id") @db.ObjectId
+  User       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exercises exercises[]
+
+  @@map("exercise_plan")
 }
 
-model ExcercisePlan {
-  id     String @id @default(auto()) @map("_id") @db.ObjectId
-  userId String @db.ObjectId
-  User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+model exercises {
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  day             String
+  exerciseName   String        @map("exercise_name")  @default("sin asignar")
+  exercisePlanId String        @db.ObjectId  @map("exercise_plan_id")
+  exercisePlan   exercisePlan @relation(fields: [exercisePlanId], references: [id], onDelete: Cascade)
+
+  @@map("exercises")
 }
 
 model MealPlan {
-  id     String @id @default(auto()) @map("_id") @db.ObjectId
-  userId String @db.ObjectId
-  User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id      String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId  String    @unique @map("user_id") @db.ObjectId
+  User    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mealDay MealDay[]
+
+  @@map("meal_plan")
+}
+
+model MealDay {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  day       String   @default("sin asignar")
+  breakfast String  @default("sin asignar")
+  brunch    String  @default("sin asignar")
+  lunch     String  @default("sin asignar")
+  snack     String  @default("sin asignar")
+  drunch    String  @default("sin asignar")
+  dinner    String  @default("sin asignar")
+  mealPlaId String   @db.ObjectId @map("meal_plan_id")
+  mealPlan  MealPlan @relation(fields: [mealPlaId], references: [id], onDelete: Cascade)
+
+  @@map("meal_day")
 }
