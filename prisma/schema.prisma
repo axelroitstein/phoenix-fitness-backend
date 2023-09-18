@@ -14,15 +14,15 @@ model User {
   id            String         @id @default(auto()) @map("_id") @db.ObjectId
   firstName     String         @map("first_name")
   lastName      String         @map("last_name")
-  email         String         @unique
+  email         String         @unique  
   password      String
   phone         String
   address       String
   role          String         @default("user")
   birthDay      DateTime       @map("birth_day")
   pay           Pay[]
-  exercisePlan exercisePlan?
-  mealPlan      MealPlan?
+  ExercisesPlan ExercisesPlan?
+  MealPlan      MealPlan?
   createdAt     DateTime       @default(now()) @map("created_at")
   updatedAt     DateTime       @updatedAt @map("updated_at")
 
@@ -34,24 +34,33 @@ model Pay {
   userId String @map("user_id") @db.ObjectId
   User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@map("pay")
+  @@map("pays")
 }
 
-model exercisePlan {
-  id         String       @id @default(auto()) @map("_id") @db.ObjectId
-  userId     String       @unique @map("user_id") @db.ObjectId
-  User       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  exercises exercises[]
+model ExercisesPlan {
+  id           String         @id @default(auto()) @map("_id") @db.ObjectId
+  userId       String         @unique @map("user_id") @db.ObjectId
+  User         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ExercisesDay ExercisesDay[]
 
-  @@map("exercise_plan")
+  @@map("exercises_plans")
 }
 
-model exercises {
+model ExercisesDay {
   id              String        @id @default(auto()) @map("_id") @db.ObjectId
-  day             String
-  exerciseName   String        @map("exercise_name")  @default("sin asignar")
-  exercisePlanId String        @db.ObjectId  @map("exercise_plan_id")
-  exercisePlan   exercisePlan @relation(fields: [exercisePlanId], references: [id], onDelete: Cascade)
+  day             String        @unique @default("sin asignar")
+  exercisesPlanId String        @map("exercises_plan_id") @db.ObjectId
+  ExercisesPlan   ExercisesPlan @relation(fields: [exercisesPlanId], references: [id], onDelete: Cascade)
+  Exercise        Exercise[]
+
+  @@map("exercises_days")
+}
+
+model Exercise {
+  id            String       @id @default(auto()) @map("_id") @db.ObjectId
+  exerciseName  String       @default("sin asignar") @map("exercise_name")
+  exerciseDayId String       @map("exercise_day_id") @db.ObjectId
+  ExercisesDay  ExercisesDay @relation(fields: [exerciseDayId], references: [id], onDelete: Cascade)
 
   @@map("exercises")
 }
@@ -62,20 +71,20 @@ model MealPlan {
   User    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   mealDay MealDay[]
 
-  @@map("meal_plan")
+  @@map("meal_plans")
 }
 
 model MealDay {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   day       String   @default("sin asignar")
-  breakfast String  @default("sin asignar")
-  brunch    String  @default("sin asignar")
-  lunch     String  @default("sin asignar")
-  snack     String  @default("sin asignar")
-  drunch    String  @default("sin asignar")
-  dinner    String  @default("sin asignar")
-  mealPlaId String   @db.ObjectId @map("meal_plan_id")
+  breakfast String   @default("sin asignar")
+  brunch    String   @default("sin asignar")
+  lunch     String   @default("sin asignar")
+  snack     String   @default("sin asignar")
+  drunch    String   @default("sin asignar")
+  dinner    String   @default("sin asignar")
+  mealPlaId String   @map("meal_plan_id") @db.ObjectId
   mealPlan  MealPlan @relation(fields: [mealPlaId], references: [id], onDelete: Cascade)
 
-  @@map("meal_day")
+  @@map("meal_days")
 }
