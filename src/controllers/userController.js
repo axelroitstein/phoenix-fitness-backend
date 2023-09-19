@@ -34,6 +34,9 @@ export const userController = () => {
                 }
               }
             }
+          },
+          MealPlan: {
+            include: { mealDay: true }
           }
         }
       })

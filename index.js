@@ -11,6 +11,9 @@ import { authRoutes } from './src/routes/authRouter.js'
 import { exercisePlanRoutes } from './src/routes/exercisePlanRouter.js'
 import { exerciseDayRoutes } from './src/routes/exerciseDayRouter.js'
 import { userRoutes } from './src/routes/userRouter.js'
+import { exerciseRoutes } from './src/routes/exerciseRouter.js'
+import { mealPlanRoutes } from './src/routes/mealPlanRouter.js'
+import { mealDayRoutes } from './src/routes/mealDayRouter.js'
 dotenv.config()
 const PORT = process.env.PORT || 3000
 
@@ -37,7 +40,10 @@ app.use(
   authRoutes(),
   exercisePlanRoutes(),
   exerciseDayRoutes(),
-  userRoutes()
+  userRoutes(),
+  exerciseRoutes(),
+  mealPlanRoutes(),
+  mealDayRoutes()
 )
 // Middleware de error handler
 app.use(errorHandler)

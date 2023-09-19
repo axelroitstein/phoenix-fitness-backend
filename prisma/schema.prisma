@@ -48,12 +48,13 @@ model ExercisesPlan {
 
 model ExercisesDay {
   id              String        @id @default(auto()) @map("_id") @db.ObjectId
-  day             String        @unique @default("sin asignar")
+  day             String        @default("sin asignar")
   exercisesPlanId String        @map("exercises_plan_id") @db.ObjectId
   ExercisesPlan   ExercisesPlan @relation(fields: [exercisesPlanId], references: [id], onDelete: Cascade)
   Exercise        Exercise[]
-
+@@unique([day, exercisesPlanId])
   @@map("exercises_days")
+  
 }
 
 model Exercise {
@@ -76,15 +77,16 @@ model MealPlan {
 
 model MealDay {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  day       String   @default("sin asignar")
+  day       String    @default("sin asignar")
   breakfast String   @default("sin asignar")
   brunch    String   @default("sin asignar")
-  lunch     String   @default("sin asignar")
+  lunch     String   @default("sin asignar")  
   snack     String   @default("sin asignar")
   drunch    String   @default("sin asignar")
   dinner    String   @default("sin asignar")
-  mealPlaId String   @map("meal_plan_id") @db.ObjectId
-  mealPlan  MealPlan @relation(fields: [mealPlaId], references: [id], onDelete: Cascade)
+  mealPlanId String   @map("meal_plan_id") @db.ObjectId
+  mealPlan  MealPlan @relation(fields: [mealPlanId], references: [id], onDelete: Cascade)
 
+  @@unique([day, mealPlanId])
   @@map("meal_days")
 }

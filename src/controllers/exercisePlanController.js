@@ -156,7 +156,7 @@ export const exercisePlanController = () => {
 
   const getAllExercisePlan = async (req, res, next) => {
     try {
-      // Metodo que usa el  req params, para borrar el plan de ejercicios, este solo disponible para administradores
+      // Metodo que usa el  req params, para traer todos, este solo disponible para administradores
       const ExercisesPlans = await prisma.exercisesPlan.findMany({})
       res.status(httpStatus.OK).json({
         success: true,
