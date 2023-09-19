@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-export const authUserId = async (req, res, next) => {
+export const getPayloadId = async (req, res, next) => {
   try {
     console.log('authuser execute')
     const headers = req.headers

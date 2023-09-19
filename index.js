@@ -9,6 +9,8 @@ import errorHandler from './src/middleware/errorHandler.js'
 // Routes
 import { authRoutes } from './src/routes/authRouter.js'
 import { exercisePlanRoutes } from './src/routes/exercisePlanRouter.js'
+import { exerciseDayRoutes } from './src/routes/exerciseDayRouter.js'
+import { userRoutes } from './src/routes/userRouter.js'
 dotenv.config()
 const PORT = process.env.PORT || 3000
 
@@ -30,7 +32,13 @@ app.use(
     path: ['/api/auth/register', '/api/auth/login', '/api/auth/refresh']
   })
 )
-app.use('/api', authRoutes(), exercisePlanRoutes())
+app.use(
+  '/api',
+  authRoutes(),
+  exercisePlanRoutes(),
+  exerciseDayRoutes(),
+  userRoutes()
+)
 // Middleware de error handler
 app.use(errorHandler)
 

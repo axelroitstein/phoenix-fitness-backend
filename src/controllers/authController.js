@@ -5,6 +5,7 @@ import bcrypt from 'bcrypt'
 import { generateToken } from '../helpers/token.js'
 
 export const authController = () => {
+  // Logeo basico que devuelve token firmado
   const login = async (req, res, next) => {
     try {
       // Obtengo mail,pass de req
@@ -29,14 +30,14 @@ export const authController = () => {
       if (!isPasswordValid) {
         return res
           .status(httpStatus.NOT_FOUND)
-          .json({ message: ' Invalid credentials ', succes: true })
+          .json({ message: ' Invalid credentials ', success: false })
       }
       // Funcion en helpers que genera los tokens pasandole el user.
       const { token, refreshToken } = generateToken(user)
       // console.log(user)
       res.status(httpStatus.OK).json({
-        succes: true,
-        message: 'login successful',
+        success: true,
+        message: 'login successsful',
         token,
         refreshToken
       })
@@ -46,7 +47,7 @@ export const authController = () => {
       prisma.$disconnect()
     }
   }
-
+  // Registro basico que recibe parametros por body
   const register = async (req, res, next) => {
     try {
       const { firstName, lastName, email, password, phone, address, birthDay } =
@@ -65,7 +66,7 @@ export const authController = () => {
         }
       })
       res.status(httpStatus.CREATED).json({
-        succes: true,
+        success: true,
         message: 'User created',
         data: user
       })

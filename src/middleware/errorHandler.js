@@ -3,14 +3,14 @@ import { Prisma } from '@prisma/client'
 const ERROR_HANDLERS = {
   ValidationError: (res, err) => {
     res.status(httpStatus.UNPROCESSABLE_CONTENT).json({
-      success: false,
+      successs: false,
       message: 'Validation error on request',
       error: err.message
     })
   },
   P2002: (res, err) => {
     res.status(httpStatus.BAD_REQUEST).json({
-      success: false,
+      successs: false,
       message: 'Intentaste crear un campo unico ya existente',
       error: err.message
     })
@@ -18,7 +18,7 @@ const ERROR_HANDLERS = {
   defaultError: (res, err) => {
     res
       .status(httpStatus.INTERNAL_SERVER_ERROR)
-      .json({ success: false, message: err.message })
+      .json({ successs: false, message: err.message })
   }
 }
 

@@ -4,7 +4,7 @@ import prisma from '../database/prisma.js'
 export const exercisePlanController = () => {
   const createExercisePlan = async (req, res, next) => {
     try {
-      console.log('Creating exercisePlan')
+      // Metodo que usa el id del usuario del middleware, y crea un plan de ejercicio para el usuario
       const userId = req.userID
       const exercisePlan = await prisma.exercisesPlan.create({
         data: {
@@ -17,7 +17,7 @@ export const exercisePlanController = () => {
         }
       })
       res.status(httpStatus.CREATED).json({
-        succes: true,
+        success: true,
         message: 'Exercise Plan is created',
         data: exercisePlan
       })
@@ -31,18 +31,27 @@ export const exercisePlanController = () => {
   const getExercisePlanForTheUser = async (req, res, next) => {
     try {
       console.log('Execute exercisePlan for the user')
-      const userId = req.userID
-      const id = userId
+      const id = req.userID
+      // Utilizando el id sacado del middleware busca ese usuario y trae su informacion completa para usar en el gym
       const user = await prisma.user.findUnique({
         where: {
           id
         },
-        include: {
+        select: {
+          firstName: true,
           ExercisesPlan: {
-            include: {
+            select: {
+              id: true,
               ExercisesDay: {
-                include: {
-                  Exercise: true
+                select: {
+                  id: true,
+                  day: true,
+                  Exercise: {
+                    select: {
+                      id: true,
+                      exerciseName: true
+                    }
+                  }
                 }
               }
             }
@@ -50,7 +59,7 @@ export const exercisePlanController = () => {
         }
       })
       res.status(httpStatus.OK).json({
-        succes: true,
+        success: true,
         message: 'Exercise plan for the user',
         data: user
       })
@@ -63,9 +72,8 @@ export const exercisePlanController = () => {
 
   const deleteExercisePlan = async (req, res, next) => {
     try {
-      const userId = req.userID
-      console.log('user in req.userId', userId)
-      const id = userId
+      // Metodo que buscando el id del middleware borra su plan de ejercicios
+      const id = req.userID
       const user = await prisma.user.findUnique({
         where: {
           id
@@ -89,9 +97,71 @@ export const exercisePlanController = () => {
         }
       })
       res.status(httpStatus.OK).json({
-        succes: true,
+        success: true,
         message: 'Exercises plan is eliminated',
         data: ExercisePlanDeleted
+      })
+    } catch (error) {
+      next(error)
+    } finally {
+      prisma.$disconnect()
+    }
+  }
+
+  const adminCreateExercisePlan = async (req, res, next) => {
+    try {
+      // Metodo que usa el req params, para crearle a un usuario el plan de ejercicios
+      const { userId } = req.params
+      const exercisePlan = await prisma.exercisesPlan.create({
+        data: {
+          userId,
+          ExercisesDay: {
+            create: {
+              Exercise: { create: {} }
+            }
+          }
+        }
+      })
+      res.status(httpStatus.CREATED).json({
+        success: true,
+        message: 'Exercise plan created, for admin',
+        data: exercisePlan
+      })
+    } catch (error) {
+      next(error)
+    } finally {
+      prisma.$disconnect()
+    }
+  }
+  const adminDeleteExercisePlan = async (req, res, next) => {
+    try {
+      // Metodo que usa el  req params, para borrar el plan de ejercicios, este solo disponible para administradores
+      const { id } = req.params
+      const ExercisePlanDeleted = await prisma.exercisesPlan.delete({
+        where: {
+          id
+        }
+      })
+      res.status(httpStatus.OK).json({
+        success: true,
+        message: 'Exercises plan is eliminated',
+        data: ExercisePlanDeleted
+      })
+    } catch (error) {
+      next(error)
+    } finally {
+      prisma.$disconnect()
+    }
+  }
+
+  const getAllExercisePlan = async (req, res, next) => {
+    try {
+      // Metodo que usa el  req params, para borrar el plan de ejercicios, este solo disponible para administradores
+      const ExercisesPlans = await prisma.exercisesPlan.findMany({})
+      res.status(httpStatus.OK).json({
+        success: true,
+        message: 'All exercises plans from users',
+        data: ExercisesPlans
       })
     } catch (error) {
       next(error)
@@ -103,6 +173,9 @@ export const exercisePlanController = () => {
   return {
     createExercisePlan,
     deleteExercisePlan,
-    getExercisePlanForTheUser
+    getExercisePlanForTheUser,
+    adminDeleteExercisePlan,
+    adminCreateExercisePlan,
+    getAllExercisePlan
   }
 }
