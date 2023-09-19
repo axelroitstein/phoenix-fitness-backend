@@ -11,7 +11,7 @@ export const auth = async (req, res, next) => {
 
     if (role !== ADMIN_ROLE) {
       res.status(HTTP_STATUS.UNAUTHORIZED).json({
-        succes: false,
+        success: false,
         message: 'You are not authorized to acces this resource'
       })
     }
