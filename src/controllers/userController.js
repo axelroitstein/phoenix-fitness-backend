@@ -10,7 +10,7 @@ export const userController = () => {
           id
         }
       })
-      res.status(httpStatus.OK).json({
+      return res.status(httpStatus.OK).json({
         success: true,
         message: 'User has been deleted',
         data: deletedUser
@@ -24,6 +24,7 @@ export const userController = () => {
 
   const getUsers = async (_req, res, next) => {
     try {
+      console.log('Get Users executing')
       const users = await prisma.user.findMany({
         include: {
           ExercisesPlan: {
@@ -54,6 +55,7 @@ export const userController = () => {
 
   const getUserById = async (req, res, next) => {
     try {
+      console.log('get user by id executing')
       const { id } = req.params
       const user = await prisma.user.findUnique({
         where: {
@@ -71,7 +73,7 @@ export const userController = () => {
           }
         }
       })
-      res.status(httpStatus.OK).json({
+      return res.status(httpStatus.OK).json({
         success: true,
         data: user
       })
@@ -103,7 +105,7 @@ export const userController = () => {
           birthDay
         }
       })
-      res.status(httpStatus.OK).json({
+      return res.status(httpStatus.OK).json({
         success: true,
         message: 'User has been updated',
         data: userUpdated
@@ -142,7 +144,7 @@ export const userController = () => {
           password: newHashedPassword
         }
       })
-      res.status(httpStatus.OK).json({
+      return res.status(httpStatus.OK).json({
         success: true,
         message: 'Password is updating',
         data: userUpdated

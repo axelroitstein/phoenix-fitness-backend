@@ -11,7 +11,7 @@ export const exerciseDayController = () => {
           exercisesPlanId
         }
       })
-      res.status(httpStatus.OK).json({
+      return res.status(httpStatus.OK).json({
         success: true,
         message: 'Exercises day is created',
         data: ExerciseDayCreated
@@ -33,7 +33,7 @@ export const exerciseDayController = () => {
           id
         }
       })
-      res.status(httpStatus.OK).json({
+      return res.status(httpStatus.OK).json({
         success: true,
         message: 'Exercise day is deleted',
         data: exerciseDayDeleted
@@ -59,7 +59,7 @@ export const exerciseDayController = () => {
           day
         }
       })
-      res.status(httpStatus.OK).json({
+      return res.status(httpStatus.OK).json({
         success: true,
         message: 'Exercise day is updated',
         data: exerciseDayUpdated
@@ -90,7 +90,7 @@ export const exerciseDayController = () => {
           }
         }
       })
-      res.status(httpStatus.OK).json({
+      return res.status(httpStatus.OK).json({
         success: true,
         message: 'Exercise by id',
         data: exerciseDayById

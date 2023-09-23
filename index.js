@@ -18,14 +18,13 @@ dotenv.config()
 const PORT = process.env.PORT || 3000
 
 const app = express()
+
+// Middleware que permite de donde se pueden mandar las solicitudes
+app.use(cors({ origin: '*' }))
+
 // Middleware que permite el uso de json
 app.use(express.json())
-// Middleware que permite de donde se pueden mandar las solicitudes
-app.use(
-  cors({
-    origin: '*'
-  })
-)
+
 // Middleware que pide el jwt en todas las rutas
 app.use(
   jwt({
@@ -35,6 +34,7 @@ app.use(
     path: ['/api/auth/register', '/api/auth/login', '/api/auth/refresh']
   })
 )
+// Erutador
 app.use(
   '/api',
   authRoutes(),

@@ -1,6 +1,8 @@
 import { Router } from 'express'
 import { userController } from '../controllers/userController.js'
+
 import { getPayloadId } from '../middleware/getPayloadId.js'
+// import { authAdminOrTrainer } from '../middleware/authAdminOrTrainer.js'
 export const userRoutes = () => {
   const userRouter = Router()
   const { getUsers, getUserById, deleteUser, updateUser, changePassword } =

@@ -10,6 +10,7 @@ export const authController = () => {
     try {
       // Obtengo mail,pass de req
       const { email, password } = req.body
+      console.log('lO QUE ME LLEGO EN BACKEND', email, password)
       const user = await prisma.user.findUnique({
         where: {
           email
@@ -19,7 +20,7 @@ export const authController = () => {
       // Si no existe le envio credenciales invalidas.
       if (!user) {
         return res
-          .status(httpStatus.NOT_FOUND)
+          .status(httpStatus.FORBIDDEN)
           .json({ message: ' Invalid credentials ' })
       }
 
@@ -29,13 +30,12 @@ export const authController = () => {
       // Si no existe le envio credenciales invalidas.
       if (!isPasswordValid) {
         return res
-          .status(httpStatus.NOT_FOUND)
+          .status(httpStatus.FORBIDDEN)
           .json({ message: ' Invalid credentials ', success: false })
       }
       // Funcion en helpers que genera los tokens pasandole el user.
       const { token, refreshToken } = generateToken(user)
-      // console.log(user)
-      res.status(httpStatus.OK).json({
+      return res.status(httpStatus.OK).json({
         success: true,
         message: 'login successsful',
         token,
@@ -65,7 +65,7 @@ export const authController = () => {
           birthDay
         }
       })
-      res.status(httpStatus.CREATED).json({
+      return res.status(httpStatus.CREATED).json({
         success: true,
         message: 'User created',
         data: user

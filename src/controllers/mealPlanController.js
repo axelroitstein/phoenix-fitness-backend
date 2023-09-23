@@ -1,19 +1,13 @@
 import prisma from '../database/prisma.js'
 import httpStatus from '../helpers/httpsStatus.js'
+import MealPlan from '../models/mealPlan.js'
 export const mealPlanController = () => {
   const createMealPlanForUser = async (req, res, next) => {
     try {
       // Metodo que usa el id del usuario del middleware, y crea un plan de dietas para el usuario
       const userId = req.userID
-      const mealPlan = await prisma.mealPlan.create({
-        data: {
-          userId,
-          mealDay: {
-            create: {}
-          }
-        }
-      })
-      res.status(httpStatus.CREATED).json({
+      const mealPlan = await MealPlan.create(prisma, userId)
+      return res.status(httpStatus.CREATED).json({
         success: true,
         message: 'Meal Plan is created',
         data: mealPlan
@@ -29,32 +23,18 @@ export const mealPlanController = () => {
     try {
       const id = req.userID
       // Utilizando el id sacado del middleware busca ese usuario y trae su informacion completa para usar en el gym
-      const user = await prisma.user.findUnique({
-        where: {
-          id
-        },
-        select: {
-          firstName: true,
-          MealPlan: {
-            select: {
-              id: true,
-              mealDay: {
-                select: {
-                  id: true,
-                  day: true,
-                  breakfast: true,
-                  brunch: true,
-                  lunch: true,
-                  snack: true,
-                  drunch: true,
-                  dinner: true
-                }
-              }
-            }
-          }
-        }
-      })
-      res.status(httpStatus.OK).json({
+      const user = await MealPlan.find(prisma, id)
+      if (!user?.MealPlan) {
+        console.log('No tiene meal plan')
+        await MealPlan.create(prisma, id)
+        const mealPlan = await MealPlan.find(prisma, id)
+        return res.status(httpStatus.OK).json({
+          success: true,
+          message: 'Meal plan for the user',
+          data: mealPlan
+        })
+      }
+      return res.status(httpStatus.OK).json({
         success: true,
         message: 'Meal plan for the user',
         data: user
@@ -88,7 +68,7 @@ export const mealPlanController = () => {
           id: MealPlanID
         }
       })
-      res.status(httpStatus.OK).json({
+      return res.status(httpStatus.OK).json({
         success: true,
         message: 'Meal plan is eliminated',
         data: MealPlanDeleted
@@ -112,7 +92,7 @@ export const mealPlanController = () => {
           }
         }
       })
-      res.status(httpStatus.CREATED).json({
+      return res.status(httpStatus.CREATED).json({
         success: true,
         message: 'Meal plan created, for admin',
         data: mealPlan
@@ -133,7 +113,7 @@ export const mealPlanController = () => {
           id
         }
       })
-      res.status(httpStatus.OK).json({
+      return res.status(httpStatus.OK).json({
         success: true,
         message: 'Meal plan is eliminated',
         data: MealPlanDeleted
@@ -149,7 +129,7 @@ export const mealPlanController = () => {
     try {
       // Metodo que usa traer todos los planes de dieta, este solo disponible para administradores
       const MealPlans = await prisma.mealPlan.findMany({})
-      res.status(httpStatus.OK).json({
+      return res.status(httpStatus.OK).json({
         success: true,
         message: 'All exercises plans from users',
         data: MealPlans

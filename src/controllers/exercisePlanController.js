@@ -1,6 +1,6 @@
 import httpStatus from '../helpers/httpsStatus.js'
 import prisma from '../database/prisma.js'
-
+import ExercisePlan from '../models/exercisePlan.js'
 export const exercisePlanController = () => {
   const createExercisePlan = async (req, res, next) => {
     try {
@@ -16,7 +16,7 @@ export const exercisePlanController = () => {
           }
         }
       })
-      res.status(httpStatus.CREATED).json({
+      return res.status(httpStatus.CREATED).json({
         success: true,
         message: 'Exercise Plan is created',
         data: exercisePlan
@@ -33,32 +33,22 @@ export const exercisePlanController = () => {
       console.log('Execute exercisePlan for the user')
       const id = req.userID
       // Utilizando el id sacado del middleware busca ese usuario y trae su informacion completa para usar en el gym
-      const user = await prisma.user.findUnique({
-        where: {
-          id
-        },
-        select: {
-          firstName: true,
-          ExercisesPlan: {
-            select: {
-              id: true,
-              ExercisesDay: {
-                select: {
-                  id: true,
-                  day: true,
-                  Exercise: {
-                    select: {
-                      id: true,
-                      exerciseName: true
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      })
-      res.status(httpStatus.OK).json({
+
+      const user = await ExercisePlan.find(prisma, id)
+      console.log(user)
+      if (!user?.ExercisesPlan) {
+        console.log('No tiene plan de ejercicio')
+        await ExercisePlan.create(prisma, id)
+
+        const user = await ExercisePlan.find(prisma, id)
+
+        return res.status(httpStatus.OK).json({
+          success: true,
+          message: 'Exercise plan for the user',
+          data: user
+        })
+      }
+      return res.status(httpStatus.OK).json({
         success: true,
         message: 'Exercise plan for the user',
         data: user
@@ -96,7 +86,7 @@ export const exercisePlanController = () => {
           id: ExercisePlanID
         }
       })
-      res.status(httpStatus.OK).json({
+      return res.status(httpStatus.OK).json({
         success: true,
         message: 'Exercises plan is eliminated',
         data: ExercisePlanDeleted
@@ -122,7 +112,7 @@ export const exercisePlanController = () => {
           }
         }
       })
-      res.status(httpStatus.CREATED).json({
+      return res.status(httpStatus.CREATED).json({
         success: true,
         message: 'Exercise plan created, for admin',
         data: exercisePlan
@@ -142,7 +132,7 @@ export const exercisePlanController = () => {
           id
         }
       })
-      res.status(httpStatus.OK).json({
+      return res.status(httpStatus.OK).json({
         success: true,
         message: 'Exercises plan is eliminated',
         data: ExercisePlanDeleted
@@ -158,7 +148,7 @@ export const exercisePlanController = () => {
     try {
       // Metodo que usa el  req params, para traer todos, este solo disponible para administradores
       const ExercisesPlans = await prisma.exercisesPlan.findMany({})
-      res.status(httpStatus.OK).json({
+      return res.status(httpStatus.OK).json({
         success: true,
         message: 'All exercises plans from users',
         data: ExercisesPlans

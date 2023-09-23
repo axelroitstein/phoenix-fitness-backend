@@ -12,7 +12,7 @@ export const exerciseController = () => {
           exerciseDayId
         }
       })
-      res.status(httpStatus.CREATED).json({
+      return res.status(httpStatus.CREATED).json({
         succes: true,
         message: 'Exercise created',
         data: exercise
@@ -32,7 +32,7 @@ export const exerciseController = () => {
           id
         }
       })
-      res.status(httpStatus.CREATED).json({
+      return res.status(httpStatus.CREATED).json({
         succes: true,
         message: 'Exercise deleted',
         data: exerciseDeleted
@@ -56,7 +56,7 @@ export const exerciseController = () => {
           exerciseName
         }
       })
-      res.status(httpStatus.CREATED).json({
+      return res.status(httpStatus.CREATED).json({
         succes: true,
         message: 'Exercise has updated',
         data: exerciseUpdated
@@ -71,7 +71,7 @@ export const exerciseController = () => {
   const getExercises = async (req, res, next) => {
     try {
       const exercises = await prisma.exercise.findMany({})
-      res.status(httpStatus.CREATED).json({
+      return res.status(httpStatus.CREATED).json({
         succes: true,
         message: 'Get all exercises',
         data: exercises
@@ -91,7 +91,7 @@ export const exerciseController = () => {
           id
         }
       })
-      res.status(httpStatus.CREATED).json({
+      return res.status(httpStatus.CREATED).json({
         succes: true,
         message: 'Exercise',
         data: exercise

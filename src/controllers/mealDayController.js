@@ -12,7 +12,7 @@ export const mealDayController = () => {
           mealPlanId
         }
       })
-      res.status(httpStatus.CREATED).json({
+      return res.status(httpStatus.CREATED).json({
         succes: true,
         message: 'Meal Day created',
         data: mealDay
@@ -32,7 +32,7 @@ export const mealDayController = () => {
           id
         }
       })
-      res.status(httpStatus.OK).json({
+      return res.status(httpStatus.OK).json({
         succes: true,
         message: 'meal day deleted',
         data: mealDayDeleted
@@ -62,7 +62,7 @@ export const mealDayController = () => {
           dinner
         }
       })
-      res.status(httpStatus.OK).json({
+      return res.status(httpStatus.OK).json({
         succes: true,
         message: 'Exercise has updated',
         data: mealDayUpdated
@@ -77,7 +77,7 @@ export const mealDayController = () => {
   const getMealDays = async (req, res, next) => {
     try {
       const mealDays = await prisma.mealDay.findMany({})
-      res.status(httpStatus.OK).json({
+      return res.status(httpStatus.OK).json({
         succes: true,
         message: 'Get all exercises',
         data: mealDays
@@ -97,7 +97,7 @@ export const mealDayController = () => {
           id
         }
       })
-      res.status(httpStatus.OK).json({
+      return res.status(httpStatus.OK).json({
         succes: true,
         message: 'Meal Day',
         data: mealDay
