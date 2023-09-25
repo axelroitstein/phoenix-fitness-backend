@@ -39,9 +39,7 @@ export const exercisePlanController = () => {
       if (!user?.ExercisesPlan) {
         console.log('No tiene plan de ejercicio')
         await ExercisePlan.create(prisma, id)
-
         const user = await ExercisePlan.find(prisma, id)
-
         return res.status(httpStatus.OK).json({
           success: true,
           message: 'Exercise plan for the user',
