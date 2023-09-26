@@ -50,6 +50,7 @@ export const authController = () => {
   // Registro basico que recibe parametros por body
   const register = async (req, res, next) => {
     try {
+      console.log('use register')
       const { firstName, lastName, email, password, phone, address, birthDay } =
         req.body
       const salt = await bcrypt.genSalt(10)
@@ -71,6 +72,7 @@ export const authController = () => {
         data: user
       })
     } catch (error) {
+      console.log(error)
       next(error)
     } finally {
       prisma.$disconnect()

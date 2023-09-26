@@ -8,15 +8,22 @@ export const exerciseDayController = () => {
       const ExerciseDayCreated = await prisma.exercisesDay.create({
         data: {
           day,
-          exercisesPlanId
+          exercisesPlanId,
+          Exercise: { create: {} }
+        },
+        include: {
+          Exercise: true
         }
       })
+      console.log(ExerciseDayCreated)
+      console.log(ExerciseDayCreated)
       return res.status(httpStatus.OK).json({
         success: true,
         message: 'Exercises day is created',
         data: ExerciseDayCreated
       })
     } catch (error) {
+      console.log(error)
       next(error)
     } finally {
       prisma.$disconnect()

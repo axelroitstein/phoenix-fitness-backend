@@ -28,17 +28,31 @@ class MealPlan {
     return user
   }
 
+  // mealPlan.js
+
   static async create (prisma, userId) {
     const mealPlan = await prisma.mealPlan.create({
       data: {
         userId,
         mealDay: {
-          create: {}
+          // Agregar mealDay dentro de data para crear los días
+          create: [
+            { day: 'Lunes' },
+            { day: 'Martes' },
+            { day: 'Miércoles' },
+            { day: 'Jueves' },
+            { day: 'Viernes' },
+            { day: 'Sábado' },
+            { day: 'Domingo' }
+          ]
         }
+      },
+      include: {
+        mealDay: true // Incluir los días en la respuesta
       }
     })
+
     return mealPlan
   }
 }
-
 export default MealPlan

@@ -18,6 +18,7 @@ export const exerciseController = () => {
         data: exercise
       })
     } catch (error) {
+      console.log(error)
       next(error)
     } finally {
       prisma.$disconnect()
@@ -46,6 +47,7 @@ export const exerciseController = () => {
 
   const updateExercise = async (req, res, next) => {
     try {
+      console.log('Exercise updating')
       const { id } = req.params
       const { exerciseName } = req.body
       const exerciseUpdated = await prisma.exercise.update({
@@ -62,6 +64,7 @@ export const exerciseController = () => {
         data: exerciseUpdated
       })
     } catch (error) {
+      console.log(error)
       next(error)
     } finally {
       prisma.$disconnect()

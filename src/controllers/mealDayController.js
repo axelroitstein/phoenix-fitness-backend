@@ -46,8 +46,10 @@ export const mealDayController = () => {
 
   const updateMealDay = async (req, res, next) => {
     try {
+      console.log('Executing update in meal day')
       const { id } = req.params
       const { day, breakfast, brunch, lunch, snack, drunch, dinner } = req.body
+      console.log(id, day, breakfast, dinner)
       const mealDayUpdated = await prisma.mealDay.update({
         where: {
           id
@@ -62,6 +64,7 @@ export const mealDayController = () => {
           dinner
         }
       })
+      console.log(mealDayUpdated)
       return res.status(httpStatus.OK).json({
         succes: true,
         message: 'Exercise has updated',

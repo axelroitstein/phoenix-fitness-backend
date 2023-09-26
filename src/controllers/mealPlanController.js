@@ -26,7 +26,7 @@ export const mealPlanController = () => {
       const user = await MealPlan.find(prisma, id)
       if (!user?.MealPlan) {
         console.log('No tiene meal plan')
-        await MealPlan.create(prisma, id)
+        await MealPlan.create(prisma, id) // Esto creará el plan de comidas con los días de la semana si no existe
         const mealPlan = await MealPlan.find(prisma, id)
         return res.status(httpStatus.OK).json({
           success: true,
